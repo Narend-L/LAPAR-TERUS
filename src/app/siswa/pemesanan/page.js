@@ -1,6 +1,5 @@
 'use client';
 
-import { AsyncCallbackSet } from 'next/dist/server/lib/async-callback-set';
 import { useState, useEffect } from 'react';
 
 export default function PemesananSiswaPage() {
@@ -28,60 +27,67 @@ export default function PemesananSiswaPage() {
     fetchMenus();
   }, []);
 
-const addToCart = (menu) => {
-  const existingItem = cart.find(item => item.menu_id === menu.id)
+  const addToCart = (menu) => {
+    const existingItem = cart.find(item => item.menu_id === menu.id);
 
+    if (existingItem) {
+      setCart(
+        cart.map(item =>
+          item.menu_id === menu.id
+            ? { ...item, jumlah: item.jumlah + 1 }
+            : item
+        )
+      );
+    } else {
+      setCart([
+        ...cart,
+        {
+          menu_id: menu.id,
+          nama_menu: menu.nama_menu,
+          harga_per_item: menu.harga,
+          jumlah: 1,
+        }
+      ]);
+    }
+  };
 
-  if (existingItem) {
-    setCart(cart.map (item =>
-      item.menu_id === menu.id
-        ? { ...item, jumlah: item.jumlah + 1}
-        : item
-    ));
-  } else {
-    setCart([...cart, {
-      menu_id: menu.id,
-      nama_menu: menu.nama_menu,
-      harga_per_item: menu.harga,
-      jumlah:1,
-    }]);
-  }
-};
+  const totalHarga = cart.reduce(
+    (total, item) => total + item.harga_per_item * item.jumlah,
+    0
+  );
 
-  // Fungsi untuk menghitung total harga
-const totalHarga = cart.reduce((total, item) => total + (item.harga_per_item * item.jumlah), 0);
-
-  // Fungsi untuk Kirim Pesanan (akan memanggil API baru)
-const handleOrder = async () => {
-  if (cart.length === 0) {
-    alert('Keranjang belanja kosong!');
-    return;
-  }
-  if (!namaPemesan) {
-    alert('Mohon masukkan nama pemesan!');
-    return;
-  }
-
-  try {
-    const response = await fetch('/api/orders/create', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({items: cart, total: totalHarga, userId: 1, nama_pemesan: namaPemesan}), // userId 1 sementara untuk siswa
-    });
-
-    if (!response.ok) {
-      throw new Error('Gagal memproses pesanan');
+  const handleOrder = async () => {
+    if (cart.length === 0) {
+      alert('Keranjang belanja kosong!');
+      return;
+    }
+    if (!namaPemesan) {
+      alert('Mohon masukkan nama pemesan!');
+      return;
     }
 
-    alert('Pesanan berhasil dibuat!');
-    setCart([]); // Kosongkan keranjang setelah sukses
-  } catch (error) {
-    alert(error.message);
-  }
-};
+    try {
+      const response = await fetch('/api/orders/create', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          items: cart,
+          total: totalHarga,
+          userId: 1,
+          nama_pemesan: namaPemesan,
+        }),
+      });
 
+      if (!response.ok) {
+        throw new Error('Gagal memproses pesanan');
+      }
 
-  // ... (kode isLoading dan error check)
+      alert('Pesanan berhasil dibuat!');
+      setCart([]);
+    } catch (error) {
+      alert(error.message);
+    }
+  };
 
   if (isLoading) {
     return <div style={{ padding: '20px' }}>Memuat menu...</div>;
@@ -91,47 +97,117 @@ const handleOrder = async () => {
     return <div style={{ padding: '20px', color: 'red' }}>{error}</div>;
   }
 
-
-  //tampilan
   return (
-    <div style={{ padding: '20px', display: 'flex', gap: '30px' }}>
-      {/* Kolom Kiri: Daftar Menu */}
+    <div
+      style={{
+        padding: '30px',
+        display: 'flex',
+        gap: '30px',
+        background: 'linear-gradient(to bottom, #EAF4FF, #ffffff)',
+        minHeight: '100vh'
+      }}
+    >
+
+      {/* Kolom Kiri */}
       <div style={{ flex: 2 }}>
-        <input 
-          type="text" 
-          placeholder="Nama Anda (Wajib diisi)" 
-          value={namaPemesan} 
+        <input
+          type="text"
+          placeholder="Nama Anda (Wajib diisi)"
+          value={namaPemesan}
           onChange={(e) => setNamaPemesan(e.target.value)}
-          style={{ width: '40%', padding: '10px', marginBottom: '20px', border: '1px solid #ccc' }}
+          style={{
+            width: '50%',
+            padding: '12px',
+            marginBottom: '20px',
+            border: '1px solid #A7C8FF',
+            borderRadius: '8px',
+            backgroundColor: '#F8FBFF'
+          }}
         />
-        <h1>Pesan Makanan</h1>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))', gap: '20px' }}>
+
+        <h1 style={{ color: '#2A4D8F', marginBottom: '20px' }}>Pesan Makanan</h1>
+
+        <div
+          style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fill, minmax(230px, 1fr))',
+            gap: '20px'
+          }}
+        >
           {menus.map((menu) => (
-            <div key={menu.id} style={{ border: '1px solid #ccc', borderRadius: '8px', padding: '15px' }}>
-              <h3>{menu.nama_menu}</h3>
-              <p>Harga: Rp {menu.harga}</p>
-              <button onClick={() => addToCart(menu)}>Tambahkan</button>
+            <div
+              key={menu.id}
+              style={{
+                border: '1px solid #A7C8FF',
+                borderRadius: '10px',
+                padding: '15px',
+                backgroundColor: '#ffffff',
+                boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
+              }}
+            >
+              <h3 style={{ color: '#2A4D8F', marginBottom: '10px' }}>{menu.nama_menu}</h3>
+              <p style={{ marginBottom: '10px' }}>Harga: Rp {menu.harga}</p>
+
+              <button
+                onClick={() => addToCart(menu)}
+                style={{
+                  backgroundColor: '#6DA9FF',
+                  color: 'white',
+                  border: 'none',
+                  padding: '10px',
+                  width: '100%',
+                  borderRadius: '8px',
+                  cursor: 'pointer'
+                }}
+              >
+                Tambahkan
+              </button>
             </div>
           ))}
         </div>
       </div>
-      
-      {/* Kolom Kanan: Keranjang dan Checkout */}
-      <div style={{ flex: 1, border: '1px solid #000', padding: '15px', borderRadius: '8px', height: 'fit-content' }}>
-        <h2>Keranjang Anda</h2>
+
+      {/* Kolom Kanan: Keranjang */}
+      <div
+        style={{
+          flex: 1,
+          border: '1px solid #A7C8FF',
+          padding: '20px',
+          borderRadius: '10px',
+          backgroundColor: '#FFFFFF',
+          height: 'fit-content',
+          boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
+        }}
+      >
+        <h2 style={{ color: '#2A4D8F' }}>Keranjang Anda</h2>
+
         {cart.length === 0 ? (
           <p>Keranjang kosong.</p>
         ) : (
           <>
             <ul>
               {cart.map((item, index) => (
-                <li key={index}>
+                <li key={index} style={{ marginBottom: '8px' }}>
                   {item.nama_menu} ({item.jumlah}x) - Rp {item.harga_per_item * item.jumlah}
                 </li>
               ))}
             </ul>
+
             <p><strong>Total: Rp {totalHarga}</strong></p>
-            <button onClick={handleOrder} style={{ backgroundColor: 'green', color: 'white', padding: '10px', width: '100%' }}>
+
+            <button
+              onClick={handleOrder}
+              style={{
+                backgroundColor: '#4CAF50',
+                color: 'white',
+                padding: '12px',
+                width: '100%',
+                border: 'none',
+                borderRadius: '8px',
+                cursor: 'pointer',
+                marginTop: '10px'
+              }}
+            >
               Pesan Sekarang
             </button>
           </>
