@@ -1,2 +1,2 @@
-# PRAKTIKUMPEMROGGABIS
+# LAPAR TERUS
 selamat berjuang... sukses...
