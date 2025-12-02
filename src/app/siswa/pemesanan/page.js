@@ -52,7 +52,7 @@ export default function PemesananSiswaPage() {
   };
 
   const totalHarga = cart.reduce(
-    (total, item) => total + item.harga_per_item * item.jumlah,
+    (total, item) => total + (item.harga_per_item * item.jumlah),
     0
   );
 

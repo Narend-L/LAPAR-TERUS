@@ -12,7 +12,7 @@ export async function POST(request) {
     // Gunakan promise untuk menangani operasi database asinkron
     return new Promise((resolve, reject) => {
       // 1. Simpan data ke tabel orders
-      const orderQuery = 'INSERT INTO orders (user_id, nama_pemesan, total_harga, tanggal_pesan) VALUES (?, ?, DATETIME(\'now\'))';
+      const orderQuery = 'INSERT INTO orders (user_id, nama_pemesan, total_harga, tanggal_pesan) VALUES (?, ?, ?, DATETIME(\'now\'))';
       
       db.run(orderQuery, [userId,nama_pemesan, total], function(err) {
         if (err) {
