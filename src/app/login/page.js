@@ -46,7 +46,7 @@ export default function LoginPage() {
           onClick={handleSiswaLogin} 
           style={{ width: '100%', padding: '10px', backgroundColor: '#007bff', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer' }}
         >
-          Login sebagai Siswa (Pemesanan Online)
+          Pemesanan Siswa
         </button>
       </div>
       
@@ -64,7 +64,7 @@ export default function LoginPage() {
           type="submit" 
           style={{ width: '100%', padding: '10px', backgroundColor: '#dc3545', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer' }}
         >
-          Login sebagai Admin (Offline & Laporan)
+          Login Admin
         </button>
       </form>
     </div>

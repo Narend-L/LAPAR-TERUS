@@ -84,6 +84,26 @@ export default function AdminDashboardPage() {
           ➤ Input Menu
         </button>
 
+        <button
+          onClick={() => router.push('/admin/laporan')}
+          style={{
+            width: '100%',
+            padding: '14px',
+            backgroundColor: '#aaaa55',
+            color: 'white',
+            border: 'none',
+            borderRadius: '10px',
+            cursor: 'pointer',
+            fontSize: '18px',
+            fontWeight: '600',
+            marginBottom: '15px',
+            transition: '0.25s'
+          }}
+          onMouseOver={(e) => (e.target.style.backgroundColor = '#777722')}
+          onMouseOut={(e) => (e.target.style.backgroundColor = '#777722')}
+        >
+          ➤ Pesanan Masuk
+        </button>
         {/* Tombol Buat Pesanan */}
         <button
           onClick={() => router.push('/admin/pemesanan')}
