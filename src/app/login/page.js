@@ -46,7 +46,7 @@ export default function LoginPage() {
           onClick={handleSiswaLogin} 
           style={{ width: '100%', padding: '10px', backgroundColor: '#007bff', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer' }}
         >
-          Pemesanan Siswa
+          Pemesanan Mahasiswa
         </button>
       </div>
       
@@ -54,7 +54,7 @@ export default function LoginPage() {
         <h2>Login Admin</h2>
         <input
           type="password"
-          placeholder="Masukkan Password Admin"
+          placeholder="Masukkan Password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           required

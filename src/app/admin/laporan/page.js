@@ -1,79 +1,115 @@
-// src/app/admin/laporan/page.js
 'use client';
 
 import { useState, useEffect } from 'react';
 
-export default function LaporanPenjualanPage() {
-  const [laporan, setLaporan] = useState([]);
+export default function PesananDapurPage() {
+  const [pesananAktif, setPesananAktif] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
-  useEffect(() => {
-    async function fetchLaporan() {
-      try {
-        const response = await fetch('/api/laporan');
-        
-        if (!response.ok) {
-            throw new Error('Gagal mengambil data laporan');
-        }
-        
-        const data = await response.json();
-        setLaporan(data);
-      } catch (error) {
-        console.error('Failed to fetch report:', error);
-      } finally {
-        setIsLoading(false);
+  const fetchPesanan = async () => {
+    setIsLoading(true);
+    try {
+      const response = await fetch('/api/laporan');
+      if (!response.ok) {
+        throw new Error('Gagal mengambil data pesanan aktif');
       }
+      const data = await response.json();
+      setPesananAktif(data);
+    } catch (error) {
+      console.error('Failed to fetch orders:', error);
+    } finally {
+      setIsLoading(false);
     }
-    fetchLaporan();
-  }, []);
+  };
 
-  if (isLoading) return <div style={{ padding: '20px' }}>Memuat Laporan Penjualan...</div>;
-  if (laporan.length === 0) return <div style={{ padding: '20px' }}>Belum ada data pesanan yang tercatat.</div>;
+  const updateStatusToDone = async (orderId) => {
+    try {
+      const response = await fetch('/api/laporan', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ order_id: orderId, new_status: 'done' }), 
+      });
 
-  // Hitung total keseluruhan penjualan
-  const totalOmzet = laporan.reduce((sum, order) => sum + order.total_harga, 0);
+      if (!response.ok) throw new Error('Gagal update status');
+      
+      alert(`Status Pesanan #${orderId} telah Selesai dan Diambil.`);
+      fetchPesanan(); 
+    } catch (error) {
+      alert(error.message);
+    }
+  };
 
+  const clearDoneOrders = async () => {
+      if (!confirm("Anda yakin ingin menghapus semua pesanan yang sudah selesai? Aksi ini TIDAK dapat dibatalkan!")) return;
+
+      try {
+          const response = await fetch('/api/laporan', {
+              method: 'DELETE', 
+          });
+
+          const result = await response.json();
+          if (!response.ok) throw new Error(result.error);
+
+          alert(result.message);
+          fetchPesanan(); 
+      } catch (error) {
+          alert(error.message);
+      }
+  }
+
+  useEffect(() => {
+    fetchPesanan();
+  }, []); 
+  
+  // ------------------------------------------------------------------
+
+  if (isLoading) return <div style={{ padding: '20px' }}>Memuat Pesanan Aktif...</div>;
+  
   return (
     <div style={{ padding: '20px' }}>
-      <h1>📊 Laporan Penjualan Kantin</h1>
-      <p>Total {laporan.length} transaksi tercatat.</p>
-      <p style={{ fontSize: '1.5em', fontWeight: 'bold', color: 'green' }}>
-        Total Omzet: Rp {totalOmzet.toLocaleString('id-ID')}
-      </p>
+      <button onClick={() => history.back()} style={{ backgroundColor: '#000', color: 'white', padding: '10px 15px', border: 'none', borderRadius: '4px', cursor: 'pointer' }}> Kembali</button>
+      <h1>Daftar Pesanan Aktif</h1>
+      
+      {/* Tombol Clear Laporan */}
+      <div style={{ marginBottom: '20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid #ccc', paddingBottom: '10px' }}>
+        <p>Total {pesananAktif.length} pesanan menunggu proses.</p>
+        <button onClick={clearDoneOrders} style={{ backgroundColor: '#f44336', color: 'white', padding: '10px 15px', border: 'none', borderRadius: '4px', cursor: 'pointer' }}>
+          Clear Pesanan Selesai
+        </button>
+      </div>
 
-      {laporan.map((order) => (
-        <div key={order.order_id} style={{ border: '1px solid #333', marginBottom: '20px', padding: '15px', borderRadius: '8px' }}>
-          <h3>Pesanan #{order.order_id}</h3>
-          <p>
-            **Pemesan:** {order.nama_pemesan} | **Tanggal:** {new Date(order.tanggal_pesan).toLocaleString('id-ID')}
+      {pesananAktif.length === 0 ? (
+          <p style={{ fontSize: '1.2em', textAlign: 'center', marginTop: '50px' }}>
+              Tidak ada pesanan aktif.
           </p>
-          <p>
-            <strong style={{ color: 'red' }}>Total Transaksi: Rp {order.total_harga.toLocaleString('id-ID')}</strong>
-          </p>
-
-          <h4>Detail Item:</h4>
-          <table style={{ width: '100%', borderCollapse: 'collapse' }}>
-            <thead>
-              <tr style={{ backgroundColor: '#f2f2f2' }}>
-                <th style={{ border: '1px solid #ddd', padding: '8px' }}>Menu</th>
-                <th style={{ border: '1px solid #ddd', padding: '8px' }}>Harga Satuan</th>
-                <th style={{ border: '1px solid #ddd', padding: '8px' }}>Jumlah</th>
-                <th style={{ border: '1px solid #ddd', padding: '8px' }}>Subtotal</th>
-              </tr>
-            </thead>
-            <tbody>
-              {order.items.map((item, index) => (
-                <tr key={index}>
-                  <td style={{ border: '1px solid #ddd', padding: '8px' }}>{item.nama_menu}</td>
-                  <td style={{ border: '1px solid #ddd', padding: '8px' }}>Rp {item.harga_per_item.toLocaleString('id-ID')}</td>
-                  <td style={{ border: '1px solid #ddd', padding: '8px' }}>{item.jumlah}</td>
-                  <td style={{ border: '1px solid #ddd', padding: '8px' }}>Rp {(item.jumlah * item.harga_per_item).toLocaleString('id-ID')}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+      ) : (
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '20px' }}>
+          {pesananAktif.map((order) => (
+            <div key={order.order_id} style={{ border: '2px solid #007bff', padding: '15px', borderRadius: '8px', boxShadow: '0 4px 8px rgba(0,0,0,0.1)' }}>
+              <h3 style={{ margin: '0 0 10px 0' }}>Nota #{order.order_id} - {order.nama_pemesan}</h3>
+              
+              <h4>Item Dipesan:</h4>
+              <ul style={{ listStyle: 'none', padding: 0 }}>
+                {order.items.map((item, index) => (
+                  <li key={index} style={{ borderBottom: '1px dotted #eee', padding: '5px 0' }}>
+                    **{item.nama_menu}** ({item.jumlah}x)
+                  </li>
+                ))}
+              </ul>
+              
+              <p style={{ fontWeight: 'bold' }}>Total: **Rp {order.total_harga.toLocaleString('id-ID')}**</p>
+              
+              {/* Tombol Selesai */}
+              <button 
+                onClick={() => updateStatusToDone(order.order_id)} 
+                style={{ width: '100%', backgroundColor: '#28a745', color: 'white', padding: '10px', marginTop: '10px', border: 'none', borderRadius: '4px', cursor: 'pointer' }}
+              >
+                ✅ DONE
+              </button>
+            </div>
+          ))}
         </div>
-      ))}
+      )}
     </div>
   );
 }

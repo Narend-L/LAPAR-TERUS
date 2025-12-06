@@ -166,6 +166,7 @@ export default function KelolaMenuPage() {
 
   return (
     <div style={pageStyle}>
+      <button onClick={() => history.back()} style={{ backgroundColor: '#000', color: 'white', padding: '10px 15px', border: 'none', borderRadius: '4px', cursor: 'pointer' }}> Kembali</button>
       <h1 style={{ fontSize: '28px', marginBottom: '20px' }}>
         {editingMenu ? '✏️ Ubah Menu' : '➕ Tambah Menu Baru'}
       </h1>

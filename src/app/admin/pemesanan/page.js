@@ -111,6 +111,7 @@ export default function PemesananSiswaPage() {
 
       {/* Kolom Kiri */}
       <div style={{ flex: 2 }}>
+        <button onClick={() => history.back()} style={{ backgroundColor: '#000', color: 'white', padding: '10px 15px', border: 'none', borderRadius: '4px', cursor: 'pointer' }}> Kembali</button>
         <input
           type="text"
           placeholder="Nama Anda (Wajib diisi)"
@@ -123,7 +124,8 @@ export default function PemesananSiswaPage() {
             border: '1px solid #A7C8FF',
             borderRadius: '8px',
             backgroundColor: '#F8FBFF',
-            fontSize: '15px'
+            fontSize: '15px',
+            marginLeft: '50px',
           }}
         />
 

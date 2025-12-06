@@ -84,12 +84,13 @@ export default function AdminDashboardPage() {
           ➤ Input Menu
         </button>
 
+        {/* Tombol Buat Pesanan */}
         <button
-          onClick={() => router.push('/admin/laporan')}
+          onClick={() => router.push('/admin/pemesanan')}
           style={{
             width: '100%',
             padding: '14px',
-            backgroundColor: '#aaaa55',
+            backgroundColor: '#dada00',
             color: 'white',
             border: 'none',
             borderRadius: '10px',
@@ -99,14 +100,14 @@ export default function AdminDashboardPage() {
             marginBottom: '15px',
             transition: '0.25s'
           }}
-          onMouseOver={(e) => (e.target.style.backgroundColor = '#777722')}
-          onMouseOut={(e) => (e.target.style.backgroundColor = '#777722')}
+          onMouseOver={(e) => (e.target.style.backgroundColor = '#bbbb00')}
+          onMouseOut={(e) => (e.target.style.backgroundColor = '#bbbb00')}
         >
-          ➤ Pesanan Masuk
+          ➤ Buat Pesanan
         </button>
-        {/* Tombol Buat Pesanan */}
+
         <button
-          onClick={() => router.push('/admin/pemesanan')}
+          onClick={() => router.push('/admin/laporan')}
           style={{
             width: '100%',
             padding: '14px',
@@ -123,7 +124,7 @@ export default function AdminDashboardPage() {
           onMouseOver={(e) => (e.target.style.backgroundColor = '#e57427')}
           onMouseOut={(e) => (e.target.style.backgroundColor = '#ff8b3d')}
         >
-          ➤ Buat Pesanan
+          ➤ Pesanan
         </button>
 
         {/* Tombol Logout */}

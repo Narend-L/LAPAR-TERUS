@@ -39,7 +39,8 @@ async function setupDatabase() {
                     user_id INTEGER,
                     nama_pemesan TEXT NOT NULL,
                     total_harga REAL NOT NULL,
-                    tanggal_pesan TEXT NOT NULL
+                    tanggal_pesan TEXT NOT NULL,
+                    status TEXT NOT NULL DEFAULT 'pending'
                 );
             `);
             db.run(`
