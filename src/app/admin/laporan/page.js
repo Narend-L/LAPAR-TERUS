@@ -92,12 +92,12 @@ export default function PesananDapurPage() {
               <ul style={{ listStyle: 'none', padding: 0 }}>
                 {order.items.map((item, index) => (
                   <li key={index} style={{ borderBottom: '1px dotted #eee', padding: '5px 0' }}>
-                    **{item.nama_menu}** ({item.jumlah}x)
+                    {item.nama_menu} ({item.jumlah}x)
                   </li>
                 ))}
               </ul>
               
-              <p style={{ fontWeight: 'bold' }}>Total: **Rp {order.total_harga.toLocaleString('id-ID')}**</p>
+              <p style={{ fontWeight: 'bold' }}>Total: Rp {order.total_harga.toLocaleString('id-ID')}</p>
               
               {/* Tombol Selesai */}
               <button 
