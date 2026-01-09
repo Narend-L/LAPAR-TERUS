@@ -47,7 +47,7 @@ export default function LoginPage() {
           <div className="bg-blue-600 w-16 h-16 rounded-2xl flex items-center justify-center text-3xl mx-auto mb-4 shadow-lg shadow-blue-200 text-white">
             🍴
           </div>
-          <h1 className="text-3xl font-black text-slate-800 tracking-tight">E-Kantin</h1>
+          <h1 className="text-3xl font-black text-slate-800 tracking-tight">Kantin Lapar Teruss</h1>
           <p className="text-slate-500 font-medium">Selamat Datang di Sistem Kantin</p>
         </div>
 
